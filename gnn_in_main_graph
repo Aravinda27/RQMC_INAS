@@ -1,0 +1,169 @@
+digraph MainGraph {
+	node [align=center fontname=helvetica fontsize=20 height=0.5 penwidth=2 shape=rect style="rounded, filled" width=0.5]
+	edge [fontname=times fontsize=20 penwidth=1.5]
+	rankdir=LR
+	{
+	}
+	add1 [label="+"]
+	add2 [label="+"]
+	add3 [label="+"]
+	add4 [label="+"]
+	{
+	}
+	{
+		node [align=center fontname=helvetica fontsize=20 height=5 penwidth=2 shape=rect style="rounded, filled" width=0.5]
+		edge [fontname=times fontsize=20 penwidth=1.5]
+		GCN [label=GCN]
+	}
+	{
+		node [align=center fontname=helvetica fontsize=20 height=0.5 penwidth=2 shape=rect style="rounded, filled" width=0.5]
+		edge [fontname=times fontsize=20 penwidth=1.5]
+		rankdir=LR
+		Video [fillcolor=lightgreen]
+	}
+	{
+		node [shape=box]
+		rank=same
+		Frame_1 -> Frame_2
+		Frame_2 -> Frame_3
+		Frame_3 -> Frame_4
+		subgraph cluster_video_features {
+			node [shape=box]
+			align=center color=lightgrey fontsize=20 style="rounded, filled"
+			Frame_1 [fillcolor=lightcoral]
+			Frame_2 [fillcolor=lightcoral]
+			Frame_3 [fillcolor=lightcoral]
+			Frame_4 [fillcolor=lightcoral]
+		}
+		Spectogram_1 -> Spectogram_2
+		Spectogram_2 -> Spectogram_3
+		Spectogram_3 -> Spectogram_4
+		subgraph cluster_Spectogram_features {
+			node [shape=box]
+			align=center color=lightgrey fontsize=20 style="rounded, filled"
+			Spectogram_1 [fillcolor=moccasin]
+			Spectogram_2 [fillcolor=moccasin]
+			Spectogram_3 [fillcolor=moccasin]
+			Spectogram_4 [fillcolor=moccasin]
+		}
+		Frame_4 -> Spectogram_1 [style=invis]
+	}
+	Video -> Frame_1 [color=black]
+	Video -> Spectogram_1 [color=black]
+	Frame_1 -> GCN [colour=black]
+	Spectogram_1 -> GCN [colour=black]
+	{
+		node [shape=box]
+		subgraph cluster_step_0 {
+			node [shape=box style="rounded, filled"]
+			align=center color=darkorchid1 fontsize=20 style="rounded, filled"
+			{
+				"C1_S1
+Sum" [fillcolor=lightskyblue1]
+				"C1_S2
+ConcatFC" [fillcolor=lightskyblue1]
+			}
+			in1_C1 [fillcolor=gold]
+			in2_C1 [fillcolor=hotpink]
+			out_C1 [fillcolor=lavender]
+			in2_C1 -> "C1_S1
+Sum"
+			in1_C1 -> "C1_S1
+Sum"
+			in2_C1 -> "C1_S2
+ConcatFC"
+			"C1_S1
+Sum" -> "C1_S2
+ConcatFC"
+			"C1_S2
+ConcatFC" -> out_C1 [label=skip]
+			"C1_S2
+ConcatFC" -> out_C1
+			"C1_S1
+Sum" -> out_C1 [label=skip]
+			"C1_S1
+Sum" -> out_C1
+		}
+	}
+	Frame_2 -> add1 [color=green]
+	Spectogram_4 -> add3 [color=blue]
+	{
+		node [shape=box]
+		subgraph cluster_step_0 {
+			node [shape=box style="rounded, filled"]
+			align=center color=darkorchid1 fontsize=20 style="rounded, filled"
+			{
+				"C1_S1
+Sum" [fillcolor=lightskyblue1]
+				"C1_S2
+ConcatFC" [fillcolor=lightskyblue1]
+			}
+			in1_C1 [fillcolor=gold]
+			in2_C1 [fillcolor=hotpink]
+			out_C1 [fillcolor=lavender]
+			in2_C1 -> "C1_S1
+Sum"
+			in1_C1 -> "C1_S1
+Sum"
+			in2_C1 -> "C1_S2
+ConcatFC"
+			"C1_S1
+Sum" -> "C1_S2
+ConcatFC"
+			"C1_S2
+ConcatFC" -> out_C1 [label=skip]
+			"C1_S2
+ConcatFC" -> out_C1
+			"C1_S1
+Sum" -> out_C1 [label=skip]
+			"C1_S1
+Sum" -> out_C1
+		}
+		subgraph cluster_step_1 {
+			node [shape=box style="rounded, filled"]
+			align=center color=darkorchid1 fontsize=20 style="rounded, filled"
+			{
+				"C2_S1
+Sum" [fillcolor=lightskyblue1]
+				"C2_S2
+Sum" [fillcolor=lightskyblue1]
+			}
+			in1_C2 [fillcolor=gold]
+			in2_C2 [fillcolor=hotpink]
+			out_C2 [fillcolor=lavender]
+			in1_C2 -> "C2_S1
+Sum"
+			in2_C2 -> "C2_S1
+Sum"
+			in2_C2 -> "C2_S2
+Sum"
+			"C2_S1
+Sum" -> "C2_S2
+Sum"
+			"C2_S2
+Sum" -> out_C2 [label=skip]
+			"C2_S2
+Sum" -> out_C2
+			"C2_S1
+Sum" -> out_C2 [label=skip]
+			"C2_S1
+Sum" -> out_C2
+		}
+	}
+	Spectogram_1 -> add2 [color=green]
+	Spectogram_3 -> add4 [color=blue]
+	GCN -> add1
+	add1 -> in1_C1
+	GCN -> add2
+	add2 -> in1_C2
+	GCN -> add3
+	add3 -> in2_C1
+	GCN -> add4
+	add4 -> in2_C2
+	"Reduction
+Output" [fillcolor=slategray3]
+	out_C1 -> "Reduction
+Output" [color=blue]
+	out_C2 -> "Reduction
+Output" [color=blue]
+}
